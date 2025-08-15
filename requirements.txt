@@ -1,0 +1,9 @@
+Flask
+Flask-CORS
+xgboost
+pandas
+scikit-learn
+shap
+mysql-connector-python
+gunicorn
+textblob

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post-Surgical Risk Assessment Platform</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏥</text></svg>">
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <div class="header-content">
+                <div class="logo-section">
+                    <div class="logo-icon">🏥</div>
+                    <div class="logo-text">
+                        <h1>MedRisk Pro</h1>
+                        <span>Post-Surgical Risk Assessment Platform</span>
+                    </div>
+                </div>
+                <div class="header-stats">
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalPatients">...</div>
+                        <div class="stat-label">Total Patients</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="avgRisk">...</div>
+                        <div class="stat-label">Avg Risk Score</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="highRiskCount">...</div>
+                        <div class="stat-label">High Risk</div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <nav class="main-nav">
+            <div class="nav-content">
+                <div class="nav-tabs">
+                    <button class="nav-tab active" data-tab="dashboard">
+                        <span class="nav-icon">📊</span>
+                        Dashboard
+                    </button>
+                    <button class="nav-tab" data-tab="assessment">
+                        <span class="nav-icon">➕</span>
+                        New Assessment
+                    </button>
+                    <button class="nav-tab" data-tab="patients">
+                        <span class="nav-icon">👥</span>
+                        Patient History
+                    </button>
+                    <button class="nav-tab" data-tab="feedback">
+                        <span class="nav-icon">📝</span>
+                            Submit Feedback
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <section id="dashboard" class="tab-content active">
+                <div class="dashboard-grid">
+                     <div class="overview-section">
+                        <h2>Risk Assessment Overview</h2>
+                        <div class="metric-cards">
+                            <div class="metric-card low-risk">
+                                <div class="metric-header"><span class="metric-icon">🟢</span><h3>Low Risk Patients</h3></div>
+                                <div class="metric-value" id="lowRiskPatients">...</div>
+                                <div class="metric-subtitle">LOS: 1-5 Days</div>
+                            </div>
+                            <div class="metric-card moderate-risk">
+                                <div class="metric-header"><span class="metric-icon">🟡</span><h3>Moderate Risk Patients</h3></div>
+                                <div class="metric-value" id="moderateRiskPatients">...</div>
+                                <div class="metric-subtitle">LOS: 6-9 Days</div>
+                            </div>
+                            <div class="metric-card high-risk">
+                                <div class="metric-header"><span class="metric-icon">🔴</span><h3>High Risk Patients</h3></div>
+                                <div class="metric-value" id="highRiskPatients">...</div>
+                                <div class="metric-subtitle">LOS: 10+ Days</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chart-section">
+                        <h3>Risk Distribution Analysis</h3>
+                        <div class="chart-container" style="position: relative; height: 300px;"><canvas id="riskChart"></canvas></div>
+                    </div>
+                    <div class="recent-patients">
+                        <h3>Recent Assessments</h3>
+                        <div class="patient-list" id="recentPatientsList"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="assessment" class="tab-content">
+                <div class="form-section" style="max-width: 800px; margin: auto;">
+                    <h2>New Patient Risk Assessment</h2>
+                    <form id="patientForm" class="patient-form">
+                        <div class="form-group-header"><h3>Patient & Admission Details</h3></div>
+                        <div class="form-row">
+                            <div class="form-group"><label class="form-label">Patient ID*</label><input type="text" class="form-control" name="patientId" required></div>
+                            <div class="form-group"><label class="form-label">Patient Name*</label><input type="text" class="form-control" name="patientName" required></div>
+                             <div class="form-group"><label class="form-label">Admission Date*</label><input type="date" class="form-control" name="admissionDate" required></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group"><label class="form-label">Age*</label><input type="number" class="form-control" name="age" min="18" max="120" required></div>
+                            <div class="form-group"><label class="form-label">Prior Admissions*</label><input type="number" class="form-control" name="priorAdmissions" min="0" value="0" required></div>
+                            <div class="form-group"><label class="form-label">Admission Type*</label><select class="form-control" name="admissionType"><option value="2">Elective</option><option value="1">Emergency</option><option value="3">Urgent</option></select></div>
+                        </div>
+                        <div class="form-group-header"><h3>Clinical Details</h3></div>
+                        <div class="form-row">
+                             <div class="form-group"><label class="form-label">Surgery Method*</label><select class="form-control" name="surgeryMethod"><option value="0">Non-surgical</option><option value="1">Minimally Invasive</option><option value="2">Open Surgery</option></select></div>
+                             <div class="form-group"><label class="form-label">Albumin (g/dL)</label><input type="number" class="form-control" name="albumin" step="0.1" placeholder="e.g., 3.5"></div>
+                             <div class="form-group"><label class="form-label">Hemoglobin (g/dL)</label><input type="number" class="form-control" name="hemoglobin" step="0.1" placeholder="e.g., 12.0"></div>
+                        </div>
+                         <div class="form-group-header"><h3>Comorbidities</h3></div>
+                        <div class="form-row" style="grid-template-columns: repeat(3, 1fr);">
+                            <div class="flex items-center gap-2"><input type="checkbox" name="hasSepsis"><label>Sepsis</label></div>
+                            <div class="flex items-center gap-2"><input type="checkbox" name="hasDelirium"><label>Delirium</label></div>
+                            <div class="flex items-center gap-2"><input type="checkbox" name="hasMalignancy"><label>Malignancy</label></div>
+                            <div class="flex items-center gap-2"><input type="checkbox" name="hasDiabetes"><label>Diabetes</label></div>
+                            <div class="flex items-center gap-2"><input type="checkbox" name="hasCHF"><label>CHF</label></div>
+                            <div class="flex items-center gap-2"><input type="checkbox" name="hasCKD"><label>CKD</label></div>
+                             <div class="flex items-center gap-2"><input type="checkbox" name="hasCOPD"><label>COPD</label></div>
+                            <div class="flex items-center gap-2"><input type="checkbox" name="hasStroke"><label>Stroke</label></div>
+                            <div class="flex items-center gap-2"><input type="checkbox" name="hasLiverDisease"><label>Liver Disease</label></div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn--primary btn--lg">Submit & Store Assessment</button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <section id="patients" class="tab-content">
+                <div class="patients-container">
+                    <div class="patients-header"><h2>Patient History</h2></div>
+                    <div class="patients-grid" id="patientsGrid"></div>
+                </div>
+            </section>
+            <section id="patients" class="tab-content">
+    </section>
+
+    <section id="feedback" class="tab-content">
+        <div class="form-section" style="max-width: 800px; margin: auto;">
+            <h2>Patient Feedback</h2>
+            <p class="text-gray-500 mb-6">We value your opinion. Please share your experience with us.</p>
+            <form id="feedbackForm">
+                <div class="form-group">
+                    <label for="feedbackPatientId" class="form-label">Patient ID*</label>
+                    <input type="text" id="feedbackPatientId" class="form-control" placeholder="e.g., MRN12345" required>
+                </div>
+                <div class="form-group">
+                    <label for="feedbackText" class="form-label">Your Feedback*</label>
+                    <textarea id="feedbackText" rows="5" class="form-control" placeholder="Tell us about the nursing care, cleanliness, your doctor, etc." required></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn--primary btn--lg">Submit Feedback</button>
+                </div>
+            </form>
+        </div>
+    </section>
+        </main>
+    </div>
+
+    <div id="patientModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalPatientName">Patient Details</h3>
+                <button class="modal-close" onclick="closePatientModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modalPatientDetails"></div>
+        </div>
+    </div>
+    
+    <div id="toast" style="display:none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background-color: #10b981; color: white; padding: 1rem; border-radius: 0.5rem; z-index: 100;"></div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
